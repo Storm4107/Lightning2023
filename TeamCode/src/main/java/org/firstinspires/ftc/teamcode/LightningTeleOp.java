@@ -166,7 +166,7 @@ public class LightningTeleOp extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-          // Ensure the robot is stationary.  Reset the encoders and set the motors to BRAKE mode
+        // Ensure the robot is stationary.  Reset the encoders and set the motors to BRAKE mode
         FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
