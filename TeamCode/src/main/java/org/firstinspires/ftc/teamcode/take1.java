@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.util.Range;
 public class take1 extends LinearOpMode {
 
     private DcMotor front_left;
-
     private DcMotor front_right;
     private DcMotor back_left;
     private DcMotor back_right;
