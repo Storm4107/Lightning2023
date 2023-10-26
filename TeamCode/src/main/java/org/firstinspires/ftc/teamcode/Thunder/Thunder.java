@@ -27,6 +27,9 @@ public class Thunder extends LinearOpMode {
 
     private DcMotor Arm;
 
+    private DcMotor Joint;
+
+
     private ElapsedTime runtime = new ElapsedTime();
 
     static final double COUNTS_PER_MOTOR_REV = 1120;    // REV 40:1  1120
@@ -50,6 +53,9 @@ public class Thunder extends LinearOpMode {
         Lift = hardwareMap.get(DcMotor.class, "Lift");
         Wench = hardwareMap.get(DcMotor.class, "Wench");
         Arm = hardwareMap.get(DcMotor.class, "Arm");
+        Joint = hardwareMap.get(DcMotor.class, "Joint");
+        Lift = hardwareMap.get(DcMotor.class, "Lift");
+
 
         FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -58,6 +64,8 @@ public class Thunder extends LinearOpMode {
         Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Wench.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Joint.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -66,6 +74,7 @@ public class Thunder extends LinearOpMode {
         Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Wench.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Joint.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         BackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -74,7 +83,7 @@ public class Thunder extends LinearOpMode {
         Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Wench.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //FrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //FrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -95,10 +104,10 @@ public class Thunder extends LinearOpMode {
             //put run code here
             while (opModeIsActive()) {
 
-                double forward = gamepad1.left_stick_y;
+                double forward = -gamepad1.left_stick_y;
                 double strafe = -gamepad1.left_stick_x;
                 double turn = -gamepad1.right_stick_x;
-                //double inout = gamepad2.right_stick_y;
+                double inout = gamepad2.right_stick_y;
 
 
                 double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 2);
@@ -109,12 +118,21 @@ public class Thunder extends LinearOpMode {
                 BackRight.setPower((forward + strafe - turn) / denominator);
 
 
-                Lift.setPower(-gamepad2.left_stick_y);
-                Arm.setPower(gamepad2.right_stick_y);
+                Lift.setPower(-gamepad2.right_stick_y);
+                Arm.setPower(gamepad2.left_stick_y);
 
                 if (gamepad2.right_bumper) {
-                    Wench.setPower(1);
+                    Joint.setPower(1);
                 } else if (gamepad2.left_bumper) {
+                    Joint.setPower(-1);
+                } else {
+                    Joint.setPower(0);
+                }
+
+
+                if (gamepad1.right_bumper) {
+                    Wench.setPower(1);
+                } else if (gamepad1.left_bumper) {
                     Wench.setPower(-1);
                 } else {
                     Wench.setPower(0);
@@ -123,6 +141,7 @@ public class Thunder extends LinearOpMode {
             }
 
         }
-    }}
+    }
+}
 
 

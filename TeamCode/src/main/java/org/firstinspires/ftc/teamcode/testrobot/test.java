@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 
 @TeleOp(name = "test")
@@ -19,6 +20,10 @@ public class test extends LinearOpMode {
     private DcMotor BackLeft;
 
     private DcMotor BackRight;
+
+    private CRServo Servo;
+
+
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -114,12 +119,24 @@ public class test extends LinearOpMode {
             BackLeft.setPower(0);
             */
 
+
+                //trigger stuff
                 if (gamepad2.left_trigger > 0) {
                     FrontLeft.setPower(-1);
+
                 } else if (gamepad2.left_bumper) {
                     FrontLeft.setPower(1);
                 }
                 else FrontLeft.setPower(0);
+
+
+                //servo code
+                while(gamepad1.a){
+                    Servo.setPower(1);
+                }
+                while (gamepad1.b){
+                    Servo.setPower(-1);
+                }
 
 
             }

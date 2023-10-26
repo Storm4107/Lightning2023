@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode.downpour;
 
 
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 
 @TeleOp(name = "DownpourTest")
@@ -27,9 +29,13 @@ public class DownpourTest extends LinearOpMode {
 
     private DcMotor Elbow;
 
-    private  DcMotor Wrist;
+    private DcMotor Wrist;
 
     private ElapsedTime runtime = new ElapsedTime();
+
+    private CRServo ServoLeft;
+
+    private CRServo ServoRight;
 
     static final double COUNTS_PER_MOTOR_REV = 1120;    // REV 40:1  1120
     static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
@@ -53,6 +59,9 @@ public class DownpourTest extends LinearOpMode {
         RightArmM = hardwareMap.get(DcMotor.class, "RightArmM");
         Elbow = hardwareMap.get(DcMotor.class, "Elbow");
         Wrist = hardwareMap.get(DcMotor.class, "Wrist");
+        ServoLeft = hardwareMap.get(CRServo.class, "ServoLeft");
+        ServoRight = hardwareMap.get(CRServo.class, "ServoRight");
+
 
         LeftArmM.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightArmM.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -76,6 +85,10 @@ public class DownpourTest extends LinearOpMode {
         BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
 
         /*
         FrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -121,14 +134,37 @@ public class DownpourTest extends LinearOpMode {
                 Elbow.setPower(gamepad2.left_stick_y);
 
 
-                    /*if (gamepad2.dpad_right) {
-                        Wrist.setPower(1);
-                    } else if (gamepad2.dpad_down) {
-                        Wrist.setPower(-1);
-                    } else {
-                        Wrist.setPower(0);
-                     */
-                    }
+                if (gamepad2.dpad_right) {
+                    Wrist.setPower(1);
+                } else if (gamepad2.dpad_down) {
+                    Wrist.setPower(-1);
+                } else {
+                    Wrist.setPower(0);
+
+                    //Left servo
+                if (gamepad2.left_bumper) {
+                    ServoLeft.setPower(1);
+                } else if (gamepad2.left_trigger > 0) {
+                    ServoLeft.setPower(-1);
                 }
-            }
-        }
+                else ServoLeft.setPower(0);
+
+                //Right servo
+                if (gamepad2.right_bumper) {
+                    ServoRight.setPower(-1);
+                }
+                else if (gamepad2.right_trigger > 0) {
+                    ServoRight.setPower(1);
+                }
+                else ServoRight.setPower(0);
+
+
+                }
+                }
+                }
+                }
+                }
+
+
+
+
