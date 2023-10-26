@@ -1,5 +1,4 @@
-package org.firstinspires.ftc.teamcode.testrobot;
-
+package org.firstinspires.ftc.teamcode.downpour;
 
 //import com.google.blocks.ftcrobotcontroller.runtime.ColorRangeSensorAccess;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -11,8 +10,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 
-@Autonomous(name = "encodertest")
-public class encodertest extends LinearOpMode {
+@Autonomous(name = "DownpourAuto")
+public class DownpourAuto extends LinearOpMode {
 
     private DcMotor FrontLeft;
 
@@ -63,9 +62,9 @@ public class encodertest extends LinearOpMode {
         RightPos = 0;
 
         waitForStart();
-
+//Negative is forward. Positive is backwards
+        drive(-1000, -1000, .25);
         drive(1000, 1000, .25);
-        drive(1000, -1000, .25);
     }
     private void drive(int leftTarget, int rightTarget, double speed) {
         LeftPos += leftTarget;
@@ -95,7 +94,7 @@ public class encodertest extends LinearOpMode {
 
 
 
-}
+    }
 
 
 
