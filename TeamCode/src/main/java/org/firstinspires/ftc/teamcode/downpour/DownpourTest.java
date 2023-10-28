@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.CRServo;
 
+import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
+
 
 @TeleOp(name = "DownpourTest")
 public class DownpourTest extends LinearOpMode {
@@ -36,6 +38,10 @@ public class DownpourTest extends LinearOpMode {
     private CRServo ServoLeft;
 
     private CRServo ServoRight;
+
+    private int LeftPos;
+
+    private int RightPos;
 
     static final double COUNTS_PER_MOTOR_REV = 1120;    // REV 40:1  1120
     static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
@@ -89,8 +95,6 @@ public class DownpourTest extends LinearOpMode {
         Elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-
-        /*
         FrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         FrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -99,71 +103,114 @@ public class DownpourTest extends LinearOpMode {
         RightArmM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Wrist.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        */
+
 
         // put initialization code here
         FrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
         LeftArmM.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        LeftPos = 0;
+        RightPos = 0;
+
 
         //wait for start button to be pressed
         waitForStart();
 
-        if (opModeIsActive()) {
 
-            //put run blocks here
-            while (opModeIsActive()) {
+        //Negative is forward. Positive is backwards
+        drive(-1000, -1000, .25);
+        drive(1000, 1000, .25);
+    }
+    private void drive(int leftTarget, int rightTarget, double speed) {
+        LeftPos += leftTarget;
+        RightPos += rightTarget;
 
-                double forward = gamepad1.left_stick_y;
-                double strafe = -gamepad1.left_stick_x;
-                double turn = -gamepad1.right_stick_x;
-                double inout = -gamepad2.right_stick_y;
+        FrontLeft.setTargetPosition(LeftPos);
+        FrontRight.setTargetPosition(RightPos);
+        BackLeft.setTargetPosition(LeftPos);
+        BackRight.setTargetPosition(RightPos);
+
+        FrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        FrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        FrontLeft.setPower(speed);
+        FrontRight.setPower(speed);
+        BackRight.setPower(speed);
+        BackLeft.setPower(speed);
+
+        while (opModeIsActive() && FrontRight.isBusy() && FrontLeft.isBusy() && BackLeft.isBusy() && BackRight.isBusy()) {
+            idle();
+        }
+    }
 
 
-                double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 2);
 
-                FrontRight.setPower((forward - strafe - turn) / denominator);
-                FrontLeft.setPower((forward + strafe + turn) / denominator);
-                BackLeft.setPower((forward - strafe + turn) / denominator);
-                BackRight.setPower((forward + strafe - turn) / denominator);
+            if (opModeIsActive()) {
 
-                LeftArmM.setPower(gamepad2.right_stick_y);
-                RightArmM.setPower(gamepad2.right_stick_y);
+                //put run blocks here
+                while (opModeIsActive()) {
 
-                Elbow.setPower(gamepad2.left_stick_y);
+                    double forward = gamepad1.left_stick_y;
+                    double strafe = -gamepad1.left_stick_x;
+                    double turn = -gamepad1.right_stick_x;
+                    double inout = -gamepad2.right_stick_y;
 
 
-                if (gamepad2.dpad_right) {
-                    Wrist.setPower(1);
-                } else if (gamepad2.dpad_down) {
-                    Wrist.setPower(-1);
-                } else {
-                    Wrist.setPower(0);
+                    double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 2);
 
-                    //Left servo
-                if (gamepad2.left_bumper) {
-                    ServoLeft.setPower(1);
-                } else if (gamepad2.left_trigger > 0) {
-                    ServoLeft.setPower(-1);
+                    FrontRight.setPower((forward - strafe - turn) / denominator);
+                    FrontLeft.setPower((forward + strafe + turn) / denominator);
+                    BackLeft.setPower((forward - strafe + turn) / denominator);
+                    BackRight.setPower((forward + strafe - turn) / denominator);
+
+                    LeftArmM.setPower(gamepad2.right_stick_y);
+                    RightArmM.setPower(gamepad2.right_stick_y);
+
+                    Elbow.setPower(gamepad2.left_stick_y);
+
+
+                    if (gamepad2.dpad_right) {
+                        Wrist.setPower(1);
+                    } else if (gamepad2.dpad_down) {
+                        Wrist.setPower(-1);
+                    } else {
+                        Wrist.setPower(0);
+
+                        //Left servo
+                        if (gamepad2.left_bumper) {
+                            ServoLeft.setPower(1);
+                        } else if (gamepad2.left_trigger > 0) {
+                            ServoLeft.setPower(-1);
+                        } else ServoLeft.setPower(0);
+
+                        //Right servo
+                        if (gamepad2.right_bumper) {
+                            ServoRight.setPower(-1);
+                        } else if (gamepad2.right_trigger > 0) {
+                            ServoRight.setPower(1);
+                        } else ServoRight.setPower(0);
+
+
+
+
+
+
+
+
+
+
+
+                            }
+                        }
+
+                    }
                 }
-                else ServoLeft.setPower(0);
+            }
+        }
 
-                //Right servo
-                if (gamepad2.right_bumper) {
-                    ServoRight.setPower(-1);
-                }
-                else if (gamepad2.right_trigger > 0) {
-                    ServoRight.setPower(1);
-                }
-                else ServoRight.setPower(0);
-
-
-                }
-                }
-                }
-                }
-                }
 
 
 

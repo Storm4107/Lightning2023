@@ -62,6 +62,8 @@ public class DownpourAuto extends LinearOpMode {
         RightPos = 0;
 
         waitForStart();
+
+
 //Negative is forward. Positive is backwards
         drive(-1000, -1000, .25);
         drive(1000, 1000, .25);
@@ -88,13 +90,14 @@ public class DownpourAuto extends LinearOpMode {
         while (opModeIsActive() && FrontRight.isBusy() && FrontLeft.isBusy() && BackLeft.isBusy() && BackRight.isBusy()) {
             idle();
         }
-
-
-
-
-
-
     }
+
+
+
+
+
+
+
 
 
 
