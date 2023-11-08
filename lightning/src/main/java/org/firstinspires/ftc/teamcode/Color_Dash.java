@@ -36,10 +36,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 public class Color_Dash extends LinearOpMode {
-    private DcMotor FrontLeft;
-    private DcMotor FrontRight;
-    private DcMotor BackLeft;
-     DcMotor BackRight;
+    DcMotor FrontLeft;
+    DcMotor FrontRight;
+    DcMotor BackLeft;
+    DcMotor BackRight;
     ColorSensor color1;
 
     @Override

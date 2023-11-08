@@ -8,8 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.exception.TargetPositionNotSetException;
 
 
 @TeleOp(name = "test")
@@ -23,11 +21,7 @@ public class test extends LinearOpMode {
 
     private DcMotor BackRight;
 
-    private Servo ServoLeft;
-
-    int degrees = 250;
-
-
+    private CRServo Servo;
 
 
 
@@ -42,9 +36,9 @@ public class test extends LinearOpMode {
     static final double DRIVE_SPEED = 1.0;
     static final double TURN_SPEED = 0.5;
 
-
-    // This function is executed when this Op Mode is selected from the Driver Station.
-
+    /**
+     * This function is executed when this Op Mode is selected from the Driver Station.
+     */
     @Override
     public void runOpMode() {
 
@@ -52,12 +46,6 @@ public class test extends LinearOpMode {
         FrontRight = hardwareMap.get(DcMotor.class, "FrontRight");
         BackLeft = hardwareMap.get(DcMotor.class, "BackLeft");
         BackRight = hardwareMap.get(DcMotor.class, "BackRight");
-        ServoLeft = hardwareMap.get(Servo.class, "ServoLeft");
-
-        //speed = 0.1;
-
-        //servoPos = 0;
-        //oldServoButton = false;
 
 
 
@@ -78,12 +66,10 @@ public class test extends LinearOpMode {
         FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-       /* FrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        FrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        */
+        //FrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //FrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //BackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //BackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
         // put initialization code here
@@ -101,13 +87,12 @@ public class test extends LinearOpMode {
             //put run blocks here
             while (opModeIsActive()) {
 
-
                 double forward = gamepad1.left_stick_y;
                 double strafe = -gamepad1.left_stick_x;
                 double turn = -gamepad1.right_stick_x;
                 double inout = -gamepad2.right_stick_y;
 
-                double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(turn), 2);
+                double denominator = Math.max(Math.abs(forward)+Math.abs(strafe)+Math.abs(turn),2);
 
                /* FrontRight.setPower((forward -strafe - turn) / denominator);
                 FrontLeft.setPower((forward +strafe + turn) / denominator);
@@ -136,70 +121,27 @@ public class test extends LinearOpMode {
 
 
                 //trigger stuff
-                if (gamepad1.left_trigger > 0) {
-                    FrontRight.setPower(-1);
+                if (gamepad2.left_trigger > 0) {
+                    FrontLeft.setPower(-1);
 
-                } else if (gamepad1.right_trigger > 0) {
-                    FrontRight.setPower(1);
-                } else FrontRight.setPower(0);
-
-                if(gamepad2.a){
-                    ServoLeft.setPosition(1);
+                } else if (gamepad2.left_bumper) {
+                    FrontLeft.setPower(1);
                 }
-                if(gamepad2.b){
-                    ServoLeft.setPosition(0);
+                else FrontLeft.setPower(0);
+
+
+                //servo code
+                while(gamepad1.a){
+                    Servo.setPower(1);
+                }
+                while (gamepad1.b){
+                    Servo.setPower(-1);
                 }
 
 
-
-                telemetry.addData("FrontLeft", FrontLeft.getCurrentPosition());
-                telemetry.addData("FrontRight", FrontRight.getCurrentPosition());
-                telemetry.addData("BackLeft", BackLeft.getCurrentPosition());
-                telemetry.addData("BackRight", BackRight.getCurrentPosition());
-                telemetry.update();
-
-               /* boolean motorButton = gamepad2.a;
-                boolean servoButton = gamepad2.b;
-
-
-                if(servoButton && !oldServoButton) {
-                    if(servoPos == 0 && gamepad2.b ) {
-                        ServoLeft.setPosition(1);
-                        servoPos = 1;
-                    }
-                    else {
-                        ServoLeft.setPosition(0.5);
-                        servoPos = 0;
-                    }
-
-                */
-
-
-
-               // oldServoButton = servoButton;
-
-                }
             }
-            //else ServoLeft.setPosition(0);
-
-                /*Right servo
-                if (gamepad2.right_bumper) {
-                    ServoRight.setPosition(-1);
-                }
-                if (gamepad2.right_trigger > 0) {                    ServoRight.setPosition(1);
-                }
-                //else ServoRight.setPosition(0);
-                 */
-
-                if (gamepad2.a);
-                FrontLeft.setTargetPosition(degrees);
-                FrontLeft.setPower(0.5);
-
+            }
 
         }
     }
-
-
-
-
 

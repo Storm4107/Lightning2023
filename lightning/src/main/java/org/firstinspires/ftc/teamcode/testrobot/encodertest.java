@@ -1,22 +1,18 @@
-package org.firstinspires.ftc.teamcode.Lightning;
+package org.firstinspires.ftc.teamcode.testrobot;
 
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
+//import com.google.blocks.ftcrobotcontroller.runtime.ColorRangeSensorAccess;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 
-
-@Autonomous(name = "Auto_Encoder_0")
-public class Auto_Encoder_0 extends LinearOpMode {
-
+@Autonomous(name = "encodertest")
+public class encodertest extends LinearOpMode {
 
     private DcMotor FrontLeft;
 
@@ -26,11 +22,15 @@ public class Auto_Encoder_0 extends LinearOpMode {
 
     private DcMotor BackRight;
 
-    private DcMotor Lift;
+    private int LeftPos;
 
-    private DcMotor Wench;
+    private int RightPos;
 
-    private DcMotor Arm;
+
+
+
+
+
 
 
     public void runOpMode() {
@@ -39,43 +39,67 @@ public class Auto_Encoder_0 extends LinearOpMode {
         FrontRight = hardwareMap.get(DcMotor.class, "FrontRight");
         BackLeft = hardwareMap.get(DcMotor.class, "BackLeft");
         BackRight = hardwareMap.get(DcMotor.class, "BackRight");
-        Lift = hardwareMap.get(DcMotor.class, "Lift");
-        Wench = hardwareMap.get(DcMotor.class, "Wench");
-        Arm = hardwareMap.get(DcMotor.class, "Arm");
+
 
         FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Wench.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Wench.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         BackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Wench.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        FrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        LeftPos = 0;
+        RightPos = 0;
+
+        waitForStart();
+
+        drive(1000, 1000, .25);
+        drive(1000, -1000, .25);
+    }
+    private void drive(int leftTarget, int rightTarget, double speed) {
+        LeftPos += leftTarget;
+        RightPos += rightTarget;
+
+        FrontLeft.setTargetPosition(LeftPos);
+        FrontRight.setTargetPosition(RightPos);
+        BackLeft.setTargetPosition(LeftPos);
+        BackRight.setTargetPosition(RightPos);
 
         FrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         FrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        // put initialization code here
-        FrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        Lift.setDirection(DcMotorSimple.Direction.REVERSE);
-    }
+        FrontLeft.setPower(speed);
+        FrontRight.setPower(speed);
+        BackRight.setPower(speed);
+        BackLeft.setPower(speed);
+
+        while (opModeIsActive() && FrontRight.isBusy() && FrontLeft.isBusy() && BackLeft.isBusy() && BackRight.isBusy()) {
+            idle();
+        }
+
+
+
+
+
+
+}
+
+
+
+
+
+
 }

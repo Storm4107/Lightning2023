@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name = "Auto_Encoder_0")
-public class Auto_Encoder_0 extends LinearOpMode {
+public class Auto_Encoder_0 {
 
 
     private DcMotor FrontLeft;
